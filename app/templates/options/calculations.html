@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Previous Calculations
+{% endblock %}
+
+{% block main %}
+
+    <!--Previous Calculations Card-->
+    <div class="card custom-card mb-3 mx-auto">
+        <!--Card Title-->
+        <div class="card-header">
+            <h5 class="card-title text-center">
+                <b>Previous Calculations (10 Most Recent)</b>
+            </h5>
+        </div>
+        <!--Previous Calculations Table-->
+        <div class="card-body">
+            <!--If data for the table exists.-->
+            {% if calcs %}
+                <table class="table table-bordered text-center">
+                    <!--Table Headers-->
+                    <thead class="table-primary">
+                        <th scope="col">Pricing Model</th>
+                        <th scope="col">Option Type</th>
+                        <th scope="col">Spot Price</th>
+                        <th scope="col">Strike Price</th>
+                        <th scope="col">Days Till Expiration</th>
+                        <th scope="col">Risk Free Rate</th>
+                        <th scope="col">Volatility</th>
+                        <th scope="col">Option Price</th>
+                    </thead>
+                    <!--Table Data-->
+                    <tbody>
+                        {% for calc in calcs %}
+                            <tr>
+                                {% for value in calc.values() %}
+                                    <td> {{ value }} </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            <!--If data for the table does not exist.-->
+            {% else %}
+                <center>No Data</center>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

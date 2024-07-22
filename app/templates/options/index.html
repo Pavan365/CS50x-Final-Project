@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+    <!--If the stock form was submitted and data was returned.-->
+    {% if info and prices and quote %}
+
+        <!--Store the data for the chart in a variable.-->
+        <script>
+            var closingPrices = {{ prices | tojson }};
+        </script>
+
+        <!--Chart.js & Local JS File-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <script src="/../static/options/index.js"></script>
+
+
+        <div class="row">
+
+            <div class="col-6">
+
+                <div class="row mb-3">
+
+                    <!--Stock Form Card-->
+                    <div class="col-4">
+                        <div class="card custom-card mb-3 mx-auto h-100 w-100">
+                            <!--Card Title-->
+                            <div class="card-header">
+                                <h5 class="card-title text-center">
+                                    <b>Quote Stock</b>
+                                </h5>
+                            </div>
+                            <!--Stock Form-->
+                            <div class="card-body">
+                                <form method="post" action="{{ url_for('options.index') }}">
+                                        {{ form.csrf_token }}
+                                    <div class="mb-3">
+                                        {{ form.ticker.label(class="form-label") }}
+                                        {{ form.ticker(class="form-control", placeholder="IBM") }}
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-dark" type="submit">Quote</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Stock Quote Card-->
+                    <div class="col-8">
+                        <div class="card custom-card h-100">
+                            <!--Card Title-->
+                            <div class="card-header">
+                                <h5 class="card-title text-center">
+                                    <b>Latest Quote</b>
+                                </h5>
+                            </div>
+                            <!--Data-->
+                            <div class="card-body">
+                                {% if quote %}
+                                    <ul class="mb-3">
+                                        <li>Quote Date : {{ quote["Date"] }}</li>
+                                        <li>Exchange : {{ info["Exchange"]}}</li>
+                                    </ul>
+                                    <ul>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <li class="quote">Open  : {{ quote["1. open"] }}</li>
+                                                <li class="quote">Close : {{ quote["4. close"] }}</li>
+                                            </div>
+                                            <div class="col-6">
+                                                <li class="quote">High : {{ quote["2. high"] }}</li>
+                                                <li class="quote">Low : {{ quote["3. low"] }}</li>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--Stock Time Series Chart Card-->
+                <div class="card custom-card mx-auto w-100">
+                    <!--Card Title-->
+                    <div class="card-header">
+                        <h5 class="card-title text-center">
+                            <b>Closing Price History - 100 Days</b>
+                        </h5>
+                    </div>
+                    <!--Chart-->
+                    <div class="card-body">
+                        <canvas id="stock-prices"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-6">
+
+                <!--Stock Info Card-->
+                <div class="card custom-card mx-auto w-100">
+                    <!--Card Title-->
+                    <div class="card-header">
+                        <h5 class="card-title text-center">
+                            <b>Company Information</b>
+                        </h5>
+                    </div>
+                    <!--Stock Info-->
+                    <div class="card-body">
+                        {% if info %}
+                            <ul>
+                            {% for k, v in info.items() %}
+                                {% if k == "Description" %}
+                                    <li align="justify">{{ k }} : {{ v }}</li>
+                                {% else %}
+                                    <li>{{ k }} : {{ v }}</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    <!--If the stock form was not submitted.-->
+    <!--Or if the stock form was submitted and data was not returned-->
+    {% else %}
+
+        <!--Flask Flashed Error Messages-->
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+            {% if messages %}
+                <div class="card error-card mb-3 mx-auto text-center w-25">
+                    <div class="card-body">
+                        {% for message in messages %}
+                            {{message}}<br>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!--Stock Form Card-->
+        <div class="card custom-card mb-3 mx-auto w-25">
+            <!--Card Title-->
+            <div class="card-header">
+                <h5 class="card-title text-center">
+                    <b>Quote Stock</b>
+                </h5>
+            </div>
+            <!--Stock Form-->
+            <div class="card-body">
+                <form method="post" action="{{ url_for('options.index') }}">
+                    {{ form.csrf_token }}
+                    <!--Ticker Input-->
+                    <div class="mb-3">
+                        {{ form.ticker.label(class="form-label") }}
+                        {{ form.ticker(class="form-control", placeholder="IBM") }}
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-dark" type="submit">Quote</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--Stock Form Information Card-->
+        <div class="card custom-card mx-auto w-50">
+            <!--Card Title-->
+            <div class="card-header">
+                <h5 class="card-title text-center">
+                    <b>Information</b>
+                </h5>
+            </div>
+            <!--Information-->
+            <div class="card-body">
+                <p align="justify">
+                    Get the latest available quote of a stock.
+                    Information about the stock, and a time-series of closing-prices of the stock are also returned.
+                    This feature is supported through the Alpha Vantage API.
+                </p>
+                <p align="justify">
+                    Enter the ticker of a stock to get results.
+                    For example AAPL for Apple, GOOG for Google, MSFT for Microsoft etc.
+                </p>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% endblock %}

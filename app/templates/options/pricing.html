@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Option Pricing
+{% endblock %}
+
+{% block main %}
+
+    <!--JS File-->
+    <script src="/../static/options/pricing.js"></script>
+
+    <!--Option-Pricing Form Errors-->
+    {% if form.errors %}
+        <div class="card error-card mb-4 mx-auto text-center w-25">
+            <div class="card-body">
+            {% for errors in form.errors.values() %}
+                {% for error in errors %}
+                    {{error}}<br>
+                {% endfor %}
+            {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if price %}
+    <!--Option Price Card-->
+    <div class="card custom-card mb-3 mx-auto text-center w-25">
+        <!--Card Title-->
+        <div class="card-header">
+            <h5 class="card-title">
+                <b>Option Price</b>
+            </h5>
+        </div>
+        <!--Option Price-->
+        <div class="card-body">
+            {{ price[0] }} Price : {{ price[1] }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+
+        <div class="col-6">
+
+            <!--Option-Pricing Form Card-->
+            <div class="card custom-card ms-auto  w-75">
+                <!--Card Title-->
+                <div class="card-header">
+                    <h5 class="card-title text-center">
+                        <b>Calculate Option Price</b>
+                    </h5>
+                </div>
+                <!--Option-Pricing Form-->
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('options.pricing') }}">
+                            {{ form.csrf_token }}
+                        <div class="row mb-3">
+                            <!--Pricing Model Selector-->
+                            <div class="col">
+                                {{ form.model.label(class="form-label") }}
+                                {{ form.model(class="form-control") }}
+                            </div>
+                            <!--Option Type Selector-->
+                            <div class="col">
+                                {{ form.type.label(class="form-label") }}
+                                {{ form.type(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <!--Spot Price Input-->
+                            <div class="col">
+                                {{ form.spot.label(class="form-label") }}
+                                {{ form.spot(class="form-control") }}
+                            </div>
+                            <!--Strike Price Input-->
+                            <div class="col">
+                                {{ form.strike.label(class="form-label") }}
+                                {{ form.strike(class="form-control") }}
+                            </div>
+                        </div>
+                        <!--Days Till Expiration Input-->
+                        <div class="mb-3">
+                            {{ form.time.label(class="form-label") }}
+                            {{ form.time(class="form-control") }}
+                        </div>
+                        <!--Risk Free Rate Input-->
+                        <div class="row mb-3">
+                            <!--Slider-->
+                            <div class="col-10">
+                                {{ form.rfr.label(class="form-label") }}
+                                {{ form.rfr(class="form-range") }}
+                            </div>
+                            <!--Slider Value-->
+                            <div class="col-2">
+                                <label for="rfrValue"></label>
+                                <input type="text" readonly class="form-control-plaintext" id="rfrValue">
+                            </div>
+                        </div>
+                        <!--Sigma Input-->
+                        <div class="row mb-3">
+                            <!--Slider-->
+                            <div class="col-10">
+                                {{ form.sigma.label(class="form-label") }}
+                                {{ form.sigma(class="form-range") }}
+                            </div>
+                            <!--Slider Value-->
+                            <div class="col-2">
+                                <label for="sigmaValue"></label>
+                                <input type="text" readonly class="form-control-plaintext" id="sigmaValue">
+                            </div>
+                        </div>
+                        <!--Submit Button-->
+                        <div class="text-center">
+                            <button class="btn btn-dark" type="submit">Calculate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-6">
+
+            <!--Option-Pricing Form Information-->
+            <div class="card custom-card me-auto w-75">
+                <!--Card Title-->
+                <div class="card-header">
+                    <h5 class="card-title text-center">
+                        <b>Information</b>
+                    </h5>
+                </div>
+                <!--Information-->
+                <div class="card-body">
+                    <p align="justify">
+                        Calculate the price of a European-Option, using one of the available pricing models.
+                    </p>
+                    <!--Table Heading-->
+                    <h6 align="center"><b>Parameters</b></h6>
+                    <!--Form Parameters Table-->
+                    <table class="table table-bordered text-center">
+                        <!--Table Headers-->
+                        <thead class="table-primary">
+                            <th scope="col">Parameter</th>
+                            <th scope="col">Description</th>
+                        </thead>
+                        <!--Table Data-->
+                        <tbody>
+                            <tr>
+                                <td>Pricing Model</td>
+                                <td>The pricing model used to calculate the price of the option.</td>
+                            </tr>
+                            <tr>
+                                <td>Option Type</td>
+                                <td>The type of the option.</td>
+                            </tr>
+                            <tr>
+                                <td>Spot Price</td>
+                                <td>The spot price of the underlying asset.</td>
+                            </tr>
+                            <tr>
+                                <td>Strike Price</td>
+                                <td>The strike price of the underlying asset.</td>
+                            </tr>
+                            <tr>
+                                <td>Days Till Expiration</td>
+                                <td>The number of days till the option expires.</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Free Rate</td>
+                                <td>The risk free rate of the underlying asset.</td>
+                            </tr>
+                            <tr>
+                                <td>Volatility</td>
+                                <td>The volatility of the underlying asset.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
