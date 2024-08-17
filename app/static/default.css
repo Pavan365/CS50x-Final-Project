@@ -1,0 +1,89 @@
+body {
+    background-color: #DEF2F1;
+    font-family : "Space Mono", monospace;
+    font-weight : bold;
+}
+
+table {
+    border-color:  #1C3334 !important;
+}
+
+td {
+    background-color: #86B3D1 !important;
+}
+
+thead, th {
+    background-color: #2F4454 !important;
+    border-color: #1C3334 !important;
+    color: white !important;
+}
+
+.btn-dark {
+    background-color: #1C3334;
+    border-color : #1C3334;
+}
+
+.btn-dark:hover {
+    background-color: #376E6F;
+    border-color : #376E6F;
+}
+
+.card-header {
+    background-color: #AFDDE5;
+    border-color:  #376E6F;
+}
+
+.custom-card {
+    background-color: #AFDDE5;
+    border-color:  #376E6F;
+}
+
+.error-card {
+    background-color: #DEF2F1;
+    border: 2px solid;
+    border-color : #CC0000 !important;
+}
+
+.form-range::-webkit-slider-thumb {
+    background:#1C3334;
+}
+
+.form-range::-webkit-slider-thumb:active  {
+    background: #376E6F;
+}
+
+.form-range:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem #376E6F;
+}
+
+.navbar {
+    background-color: #1C3334;
+}
+
+.nav-link {
+    color: white;
+}
+
+.nav-link:hover {
+    color: #DA7B93;
+}
+
+.success-card {
+    background-color: #DEF2F1;
+    border: 2px solid;
+    border-color : #1C3334 !important;
+}
+
+#page-header {
+    background-color: #376E6F;
+    color: white;
+    font-family : "Monoton", sans-serif;
+    font-size : 100px;
+    font-weight: normal;
+    padding: 50px;
+    text-align : center;
+}
+
+#rfrValue, #sigmaValue {
+    font-weight:bold
+}
